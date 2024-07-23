@@ -92,7 +92,11 @@ input, textarea, select{
   border-radius: 4px;
 }
 input:focus, textarea:focus{ border: 1px solid hsl(0, 0%, 65%); }
-
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .cont{
   width: var(--cont-width);
   margin-inline: auto;
@@ -144,6 +148,7 @@ main{
 }
 .user-input table input{
   width: 100%;
+  padding: 0 5px;
   border-radius: 0;
   border-top: none;
   border-left: none;
