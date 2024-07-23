@@ -231,12 +231,11 @@ async function allocatePendingJobs(){
   }
 }
 
-
-
 function updateContent(job){
   const {number, size, timeUnit, timeUnitLeft, allocated, done} = job;
   const cell = timeUnitTable.querySelector(`tbody tr:nth-child(${number}) .TU`);
-
+  const obj = {};
+  
   cell.classList.remove('TU');
   if(--job.timeUnitLeft === 0){
     cell.innerText = '*';
@@ -245,6 +244,7 @@ function updateContent(job){
     const jobDiv = memory.querySelector(`.J${number}`);
     if(jobDiv){
       memory.removeChild(jobDiv);
+      flow.innerHTML += `<div>J${number}</div>`;
       return {deallocate: true};
     }
   }
