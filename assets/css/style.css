@@ -59,7 +59,7 @@ button{
   border: none;
   cursor: pointer;
 }
-h4, p, li, th, td{ font-size: var(--fs-14-16); }
+h4, p, span, li, th, td{ font-size: var(--fs-14-16); }
 ul{ list-style: none; }
 
 .scroll-container{
@@ -103,7 +103,7 @@ input::-webkit-inner-spin-button {
 }
 
 main{
-  margin: 15px;
+  margin: 80px 25px;
 }
 
 /* --==User Input==-- */
@@ -111,22 +111,41 @@ main{
   display: flex;
   justify-content: center;
 }
-.user-input > form{
+.user-input form{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   width: 500px;
 }
-.user-input :is(.memory-size, .time-compaction, .coalescing-hole){
+.user-input section{
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 15px 0;
+}
+.user-input .basic-input{
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.user-input .basic-input > div{
   display: flex;
 }
-.user-input :is(.memory-size, .time-compaction, .coalescing-hole) input{
+.user-input .basic-input input{
   padding: 0 3px;
   width: 3lh;
   border-top: none;
   border-left: none;
   border-right: none;
   border-radius: 0;
+}
+.user-input .algorithms{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.user-input .algorithms label{
+  display: flex;
+  gap: 5px;
 }
 .user-input table tr :first-child{
   text-align: center;
@@ -138,9 +157,6 @@ main{
 }
 .user-input .add-job:hover{
   text-decoration: underline;
-}
-.user-input p{
-  margin-bottom: 5px;
 }
 .user-input .jobs{
   display: flex;
@@ -249,7 +265,7 @@ main{
   :root{
     --cont-width: 720px;
   }
-
+  
   /* --==Simulation==-- */
   .simulation .top{
     grid-template-columns: 1fr;
@@ -268,4 +284,9 @@ main{
   }
 
   td, th{ padding: 1px; }
+
+  /* --==User Input==-- */
+  .user-input section{
+    grid-template-columns: 1fr;
+  }
 }

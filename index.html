@@ -17,27 +17,45 @@
 <body>
   <main>
     <article class="user-input">
-      <form action="">
-        <div class="memory-size">
-          <span>
-            Memory Size(MB):
-            <input type="number" name="memorySize" id="memorySize" value="1000" min="10" required>
-          </span>
-        </div>
-        <div class="time-compaction">
-          <span>
-            Time Compaction:
-            <input type="number" name="timeCompaction" id="timeCompaction" value="20" min="1" required>
-          </span>
-        </div>
-        <div class="coalescing-hole">
-          <span>
-            Coalescing Hole:
-            <input type="number" name="coalescingHole" id="coalescingHole" value="1" min="1" required>
-          </span>
-        </div>
+      <form>
+        <section>
+          <div class="basic-input">
+            <div class="memory-size">
+              <span>
+                Memory Size(MB):
+                <input type="number" name="memorySize" id="memorySize" min="1" step="0.01" required>
+              </span>
+            </div>
+            <div class="time-compaction">
+              <span>
+                Time Compaction:
+                <input type="number" name="timeCompaction" id="timeCompaction" min="1" required>
+              </span>
+            </div>
+            <div class="coalescing-hole">
+              <span>
+                Coalescing Hole:
+                <input type="number" name="coalescingHole" id="coalescingHole" min="1" required>
+              </span>
+            </div>
+          </div>
+          <div class="algorithms">
+            <p>Algorithms</p>
+            <label for="First-Fit">
+              <input type="radio" name="algorithm" id="First-Fit" value="First Fit" checked>
+              <p>First Fit</p>
+            </label>
+            <label for="Best-Fit">
+              <input type="radio" name="algorithm" id="Best-Fit" value="Best Fit">
+              <p>Best Fit</p>
+            </label>
+            <label for="Worst-Fit">
+              <input type="radio" name="algorithm" id="Worst-Fit" value="Worst Fit">
+              <p>Worst Fit</p>
+            </label>
+          </div>
+        </section>
         <div class="jobs">
-          <p>Jobs</p>
           <table>
             <thead>
               <tr>
@@ -50,77 +68,15 @@
               <tr>
                 <td>1</td>
                 <td>
-                  <input type="number" name="size1" id="size1" value="500" min="10" required>
+                  <input type="number" name="size1" id="size1" min="10" required>
                 </td>
                 <td>
-                  <input type="number" name="timeUnit1" id="timeUnit1" value="3" min="1" required>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>
-                  <input type="number" name="size2" id="size2" value="250" min="10" required>
-                </td>
-                <td>
-                  <input type="number" name="timeUnit2" id="timeUnit2" value="4" min="1" required>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>
-                  <input type="number" name="size3" id="size3" value="200" min="10" required>
-                </td>
-                <td>
-                  <input type="number" name="timeUnit3" id="timeUnit3" value="5" min="1" required>
-                </td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>
-                  <input type="number" name="size4" id="size4" value="350" min="10" required>
-                </td>
-                <td>
-                  <input type="number" name="timeUnit4" id="timeUnit4" value="3" min="1" required>
-                </td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>
-                  <input type="number" name="size5" id="size5" value="60" min="10" required>
-                </td>
-                <td>
-                  <input type="number" name="timeUnit5" id="timeUnit5" value="5" min="1" required>
-                </td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>
-                  <input type="number" name="size6" id="size6" value="300" min="10" required>
-                </td>
-                <td>
-                  <input type="number" name="timeUnit6" id="timeUnit6" value="3" min="1" required>
-                </td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>
-                  <input type="number" name="size7" id="size7" value="400" min="10" required>
-                </td>
-                <td>
-                  <input type="number" name="timeUnit7" id="timeUnit7" value="2" min="1" required>
+                  <input type="number" name="timeUnit1" id="timeUnit1" min="1" required>
                 </td>
               </tr>
             </tbody>
           </table>
           <button type="button" class="add-job" onclick="addRow()">+ add job</button>
-        </div>
-        <div class="algorithms">
-          <p>Algorithms</p>
-          <select name="algorithm" id="algorithm">
-            <option value="First Fit">First-fit</option>
-            <option value="Best Fit">Best-fit</option>
-            <option value="Worst Fit">Worst-fit</option>
-          </select>
         </div>
         <div class="bottom">
           <button type="submit">Confirm</button>
