@@ -12,6 +12,7 @@ let given = {
   jobs: [],
   timeCompaction: 0,
   coalescingHole: 0,
+  currentTimeUnit: 1,
 }
 let largestTU = 0;
 let jobsInMemory;
@@ -19,16 +20,17 @@ function addRow(){
   const jobNumber = tbody.children.length + 1;
 
   tbody.innerHTML += 
-  `<tr>
-    <td>${jobNumber}</td>
-    <td>
-      <input type="number" name="size${jobNumber}" id="size${jobNumber}" min="10" required>
-    </td>
-    <td>
-      <input type="number" name="timeUnit${jobNumber}" id="timeUnit${jobNumber}" min="1" required>
-    </td>
-  </tr>`;
+    `<tr>
+      <td>${jobNumber}</td>
+      <td>
+        <input type="number" name="size${jobNumber}" id="size${jobNumber}" min="10" required>
+      </td>
+      <td>
+        <input type="number" name="timeUnit${jobNumber}" id="timeUnit${jobNumber}" min="1" required>
+      </td>
+    </tr>`;
 }
+// Submit & Validate Inputs
 form.addEventListener('submit', e => {
   e.preventDefault();
 
@@ -85,7 +87,7 @@ async function startSimulation(){
   }
 }
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms || 1200));
 const totalTimeUnitsLeft = () => given.jobs.reduce((total, job) => total + job.timeUnitLeft, 0);
 function generateContent(){
   userInput.style.display = 'none';
@@ -137,6 +139,12 @@ function updateJobsInMemory(){
   jobsInMemory.forEach(div => memory.appendChild(div));
 }
 
+function getBounds(element){
+  const bounds = element.style.gridRow.split('/');
+  return {start: parseInt(bounds[0]), end: parseInt(bounds[1])};
+}
+
+// First-Fit Algorithm
 async function firstFitAlgorithm(){
   for(let job of given.jobs){
     const {number, size, allocated, done} = job;
@@ -150,23 +158,21 @@ async function firstFitAlgorithm(){
     updateJobsInMemory();
 
     if(job.allocated){
-      const res = updateContent(job);
-      if(res.deallocate){
-        await delay(1500);
+      const res = await updateContent(job);
+
+      await delay();
+      if(res){
         await allocatePendingJobs();
       }
-      else{
-        await delay(1500);
+      if(given.currentTimeUnit % given.timeCompaction === 0){
+        await timeCompaction();
       }
     }
   }
 }
 function firstFitAllocate(job){
   const {number, size} = job;
-  const getBounds = (element) => {
-    const bounds = element.style.gridRow.split('/');
-    return { start: parseInt(bounds[0]), end: parseInt(bounds[1]) };
-  }
+
   if(jobsInMemory.length === 0 && size <= given.memorySize){
     memory.innerHTML += `<div class="J${number}" style="grid-row: 1/${size};">J${number} - ${size}</div>`;
     job.allocated = true;
@@ -174,18 +180,20 @@ function firstFitAllocate(job){
   else{
     let start, end;
 
-    for (let i = 0; i <= jobsInMemory.length; i++) {
-      if (i === 0) {
+    for(let i = 0; i <= jobsInMemory.length; i++){
+      if (i === 0){
         start = 0;
         end = getBounds(jobsInMemory[i]).start;
-      } else if (i === jobsInMemory.length) {
+      }
+      else if(i === jobsInMemory.length){
         start = getBounds(jobsInMemory[i - 1]).end;
         end = given.memorySize;
-      } else {
+      }
+      else{
         start = getBounds(jobsInMemory[i - 1]).end;
         end = getBounds(jobsInMemory[i]).start;
       }
-      if (size <= end - start) {
+      if(size <= end - start){
         memory.innerHTML += `<div class="J${number}" style="grid-row: ${(start === 0) ? 1 : start}/${start + size};">J${number} - ${size}</div>`;
         job.allocated = true;
         break;
@@ -193,18 +201,21 @@ function firstFitAllocate(job){
     }
   }
 }
+// Best-Fit Algorithm
 async function bestFitAlgorithm(){
 
 }
 function bestFitAllocate(job){
 
 }
+// Worst-Fit Algorithm
 async function worstFitAlgorithm(){
 
 }
 function worstFitAllocate(job){
 
 }
+// Allocating Jobs When A Job is Deallocated
 async function allocatePendingJobs(){
   for (let job of given.jobs) {
     const {allocated, done} = job;
@@ -223,18 +234,19 @@ async function allocatePendingJobs(){
       }
 
       if(job.allocated){
-        updateContent(job);
-        await delay(1500);
+        await updateContent(job);
+        await delay();
       }
     }
     updateJobsInMemory();
   }
 }
 
-function updateContent(job){
+// Updating UI Elements Every Time Unit
+async function updateContent(job){
   const {number, size, timeUnit, timeUnitLeft, allocated, done} = job;
   const cell = timeUnitTable.querySelector(`tbody tr:nth-child(${number}) .TU`);
-  const obj = {};
+  let deallocate = false;
   
   cell.classList.remove('TU');
   if(--job.timeUnitLeft === 0){
@@ -244,13 +256,32 @@ function updateContent(job){
     const jobDiv = memory.querySelector(`.J${number}`);
     if(jobDiv){
       memory.removeChild(jobDiv);
-      flow.innerHTML += `<div>J${number}</div>`;
-      return {deallocate: true};
+      deallocate = true;
     }
   }
   else{
     cell.innerText = job.timeUnitLeft;
   }
   flow.innerHTML += `<div>J${number}</div>`;
-  return {deallocate: false};
+  given.currentTimeUnit++;
+
+  return deallocate;
+}
+
+// Time Compaction Function
+async function timeCompaction(){
+  let start = 1;
+
+  for(let i = 0; i < jobsInMemory.length; i++){
+    const bounds = jobsInMemory[i].style.gridRow.split('/');
+    const size = parseInt(bounds[1]) - parseInt(bounds[0]);
+    
+    jobsInMemory[i].style.gridRow = `${start}/${start + size}`;
+    start += size;
+
+    given.currentTimeUnit++;
+
+    flow.innerHTML += `<div>SC</div>`;
+    await delay();
+  }
 }
