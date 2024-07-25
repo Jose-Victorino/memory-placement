@@ -18,17 +18,19 @@ let largestTU = 0;
 let jobsInMemory;
 function addRow(){
   const jobNumber = tbody.children.length + 1;
-
-  tbody.innerHTML += 
-    `<tr>
-      <td>${jobNumber}</td>
-      <td>
-        <input type="number" name="size${jobNumber}" id="size${jobNumber}" min="10" required>
-      </td>
-      <td>
-        <input type="number" name="timeUnit${jobNumber}" id="timeUnit${jobNumber}" min="1" required>
-      </td>
-    </tr>`;
+  const succeedingTR = tbody.querySelector('tr:last-child');
+  const tr = document.createElement('tr');
+  
+  tr.innerHTML +=`
+    <td>${jobNumber}</td>
+    <td>
+      <input type="number" name="size${jobNumber}" id="size${jobNumber}" min="10" required>
+    </td>
+    <td>
+      <input type="number" name="timeUnit${jobNumber}" id="timeUnit${jobNumber}" min="1" required>
+    </td>`;
+  
+  succeedingTR.after(tr);
 }
 // Submit & Validate Inputs
 form.addEventListener('submit', e => {
