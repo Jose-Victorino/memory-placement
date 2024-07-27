@@ -1,7 +1,6 @@
 :root{
   /* Font Families */
   --font-1: 'Poppins', 'Roboto', 'Open Sans', sans-serif;
-  --font-2: '';
 
   /* Sizes */
   --cont-width: 1350px;
@@ -31,13 +30,6 @@
 	margin: 0;
 	padding: 0;
 }
-::-webkit-scrollbar{
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-thumb{ background: hsl(222, 2%, 16%); }
-::-webkit-scrollbar-thumb:hover{ background: hsl(222, 2%, 20%); }
-::-webkit-scrollbar-track{ margin-block: 20px; }
 html, body{ overflow-x: hidden; }
 body{
   position: relative;
@@ -85,6 +77,7 @@ textarea{
   resize: none;
 }
 input, textarea, select{
+  background: var(--l-gray-1);
   font-family: var(--font-1);
   color: var(--font-dark);
   outline: none;
@@ -103,7 +96,7 @@ input::-webkit-inner-spin-button {
 }
 
 main{
-  margin: 80px 25px;
+  margin: 80px 0;
 }
 
 /* --==User Input==-- */
@@ -114,8 +107,10 @@ main{
 .user-input form{
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 30px;
   width: 500px;
+  padding: 15px;
+  background: var(--l-gray-1);
 }
 .user-input section{
   display: grid;
@@ -281,6 +276,9 @@ main{
 @media(max-width: 560px){
   :root{
     --cont-width: calc(100% - 30px);
+  }
+  .user-input form{
+    gap: 15px;
   }
 
   td, th{ padding: 1px; }
